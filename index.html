@@ -1,0 +1,790 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0703">
+<title>GAMBLINGHAN DEMO</title>
+
+<style>
+:root {
+  --bg: #0d0703;
+  --panel: #211205;
+  --gold: #d69a2b;
+  --light: #ffe7a2;
+  --muted: #bd8832;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% -10%, #805015 0, #281505 35%, #0d0703 75%);
+  color: var(--light);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.app {
+  width: min(980px, 100%);
+  margin: auto;
+  padding: 16px;
+}
+
+header {
+  text-align: center;
+  padding: 8px 0 16px;
+}
+
+.logo {
+  color: var(--light);
+  font-size: clamp(25px, 7vw, 54px);
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-shadow: 0 0 8px #ffcc55, 0 0 22px #9b5d14;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+
+.balance {
+  text-align: center;
+  padding: 15px;
+  margin-bottom: 14px;
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #4b2b0a, #1b0e03);
+  box-shadow: 0 0 22px #d99a2b33;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.panel {
+  padding: 17px;
+  margin-bottom: 14px;
+  border: 1px solid #90621d;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #2b1807, #140a03);
+  box-shadow: inset 0 0 24px #0009, 0 8px 25px #0008;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 620px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+label {
+  display: block;
+  color: #ddb45c;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+select,
+input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #a77323;
+  border-radius: 10px;
+  background: #100803;
+  color: var(--light);
+  outline: none;
+  font-size: 16px;
+}
+
+.result {
+  min-height: 165px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: pre-line;
+  margin: 18px 0;
+  padding: 15px;
+  border: 2px solid var(--gold);
+  border-radius: 18px;
+  background: radial-gradient(circle, #40270d, #090502 75%);
+  color: var(--light);
+  text-align: center;
+  font-size: clamp(38px, 10vw, 76px);
+  letter-spacing: 8px;
+  text-shadow: 0 0 15px #ffcd54;
+}
+
+.message {
+  min-height: 28px;
+  color: #e2b65d;
+  text-align: center;
+  font-size: 15px;
+  white-space: pre-line;
+}
+
+button {
+  padding: 13px 15px;
+  border: 1px solid #d3a03a;
+  border-radius: 11px;
+  background: linear-gradient(#704710, #382006);
+  color: var(--light);
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+button:hover {
+  filter: brightness(1.3);
+}
+
+.spin {
+  width: 100%;
+  margin-top: 10px;
+  padding: 17px;
+  border-color: #fff0ad;
+  background: linear-gradient(#ffe08a, #bb7c18);
+  color: #190b02;
+  font-size: 21px;
+  box-shadow: 0 0 18px #d99c2e66;
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 500px) {
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  color: #d6a64b;
+  text-align: center;
+  font-size: 13px;
+}
+
+.stat {
+  padding: 10px 4px;
+  border: 1px solid #674314;
+  border-radius: 10px;
+  background: #190e04;
+}
+
+.admin {
+  display: none;
+}
+
+.admin.open {
+  display: block;
+}
+
+.admin h2 {
+  color: var(--light);
+  text-align: center;
+  font-size: 20px;
+  margin: 0 0 14px;
+}
+
+.admin-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 500px) {
+  .admin-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-note {
+  margin-top: 12px;
+  color: #aa7b32;
+  text-align: center;
+  font-size: 12px;
+}
+
+.footer {
+  padding: 10px;
+  color: #806332;
+  text-align: center;
+  font-size: 11px;
+}
+
+.win {
+  animation: win .55s ease-in-out 2;
+}
+
+.lose {
+  animation: lose .2s ease-in-out 2;
+}
+
+@keyframes win {
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 27px white;
+  }
+}
+
+@keyframes lose {
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <div class="logo">✦ GAMBLINGHAN ✦</div>
+  <div class="subtitle">
+    ROYAL GOLDEN DEMO • ВИРТУАЛЬНЫЕ МОНЕТЫ
+  </div>
+</header>
+
+<div class="balance" id="balance"></div>
+
+<section class="panel">
+  <div class="grid">
+
+    <div>
+      <label for="game">Игра</label>
+
+      <select id="game">
+        <option value="slot1">Golden Pharaoh — слот</option>
+        <option value="slot2">Royal Vault — слот</option>
+        <option value="roulette">Roulette Demo</option>
+        <option value="dice">Lucky Dice</option>
+        <option value="blackjack">Blackjack Demo</option>
+        <option value="wheel">Treasure Wheel</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="bet">Ставка</label>
+
+      <select id="bet">
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>50</option>
+        <option>100</option>
+        <option>200</option>
+        <option>300</option>
+        <option>500</option>
+        <option>1000</option>
+        <option>5000</option>
+        <option>10000</option>
+        <option>50000</option>
+        <option>100000</option>
+        <option>200000</option>
+        <option>300000</option>
+        <option>500000</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="result" id="result">✦ ✦ ✦</div>
+
+  <div class="message" id="message">
+    Выбери игру и нажми «Прокрутить»
+  </div>
+
+  <button class="spin" id="spin">
+    ✦ ПРОКРУТИТЬ ✦
+  </button>
+</section>
+
+<section class="panel">
+  <div class="stats">
+    <div class="stat">
+      🏆 Выиграно<br>
+      <span id="won">0</span>
+    </div>
+
+    <div class="stat">
+      📉 Проиграно<br>
+      <span id="lost">0</span>
+    </div>
+
+    <div class="stat">
+      🎲 Игр<br>
+      <span id="games">0</span>
+    </div>
+  </div>
+</section>
+
+<div class="bottom">
+  <button id="reset">
+    ↻ Сбросить счёт
+  </button>
+
+  <button id="openAdmin">
+    ⚙ Панель
+  </button>
+</div>
+
+<section class="panel admin" id="admin">
+  <h2>🔐 ПАНЕЛЬ DEMO</h2>
+
+  <input
+    id="code"
+    type="password"
+    inputmode="numeric"
+    placeholder="Введите код панели"
+  >
+
+  <button id="login" style="width:100%;margin-top:10px">
+    Открыть панель
+  </button>
+
+  <div id="adminControls" style="display:none;margin-top:15px">
+
+    <input
+      id="amount"
+      type="number"
+      min="0"
+      max="500000"
+      placeholder="Количество виртуальных монет"
+    >
+
+    <div class="admin-actions">
+      <button id="add">
+        ＋ Добавить
+      </button>
+
+      <button id="remove">
+        − Убавить
+      </button>
+    </div>
+
+    <button id="zero" style="width:100%;margin-top:10px">
+      Обнулить баланс
+    </button>
+
+    <button id="closeAdmin" style="width:100%;margin-top:10px">
+      ✕ Закрыть панель
+    </button>
+
+    <div class="admin-note">
+      После закрытия панели код нужно ввести снова.
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  ДЕМО-РЕЖИМ • Реальных денег нет
+</div>
+
+</div>
+
+<script>
+"use strict";
+
+const ADMIN_CODE = "666444787";
+const START_BALANCE = 500000;
+const MAX_BALANCE = 500000;
+
+const SYMBOLS = {
+  slot1: ["👑", "💎", "🪙", "🏺", "🐍", "7️⃣"],
+  slot2: ["💰", "🔱", "💎", "🗝️", "🌟", "7️⃣"]
+};
+
+const state = {
+  balance: Number(localStorage.getItem("gh_balance")) || START_BALANCE,
+  won: Number(localStorage.getItem("gh_won")) || 0,
+  lost: Number(localStorage.getItem("gh_lost")) || 0,
+  games: Number(localStorage.getItem("gh_games")) || 0
+};
+
+const $ = id => document.getElementById(id);
+
+function formatNumber(number) {
+  return Math.max(0, Math.floor(number))
+    .toLocaleString("ru-RU");
+}
+
+function saveState() {
+  localStorage.setItem("gh_balance", state.balance);
+  localStorage.setItem("gh_won", state.won);
+  localStorage.setItem("gh_lost", state.lost);
+  localStorage.setItem("gh_games", state.games);
+}
+
+function updateScreen() {
+  $("balance").textContent =
+    `💰 Баланс: ${formatNumber(state.balance)} виртуальных монет`;
+
+  $("won").textContent = formatNumber(state.won);
+  $("lost").textContent = formatNumber(state.lost);
+  $("games").textContent = state.games;
+
+  saveState();
+}
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function playSound(type) {
+  try {
+    const AudioContext =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) {
+      return;
+    }
+
+    const context = new AudioContext();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value =
+      type === "win" ? 720 : 180;
+
+    gain.gain.setValueAtTime(
+      0.0001,
+      context.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.15,
+      context.currentTime + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      context.currentTime + 0.18
+    );
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+
+    oscillator.start();
+    oscillator.stop(context.currentTime + 0.2);
+  } catch (error) {
+    // Звук может быть заблокирован настройками браузера.
+  }
+}
+
+function showResult(text, message, isWin) {
+  const resultBox = $("result");
+
+  resultBox.classList.remove("win", "lose");
+  void resultBox.offsetWidth;
+  resultBox.classList.add(isWin ? "win" : "lose");
+
+  resultBox.textContent = text;
+  $("message").textContent = message;
+
+  playSound(isWin ? "win" : "lose");
+}
+
+function getRandomMultiplier() {
+  return [2, 2, 3, 5, 10][randomInt(0, 4)];
+}
+
+function finishRound(bet, multiplier, resultText) {
+  state.games++;
+
+  if (multiplier > 0) {
+    const payout = bet * multiplier;
+
+    state.balance = Math.min(
+      MAX_BALANCE,
+      state.balance - bet + payout
+    );
+
+    state.won += payout;
+
+    showResult(
+      resultText || `X${multiplier}`,
+      `Выигрыш: ${formatNumber(bet)} × ${multiplier} = ${formatNumber(payout)}`,
+      true
+    );
+  } else {
+    state.balance = Math.max(
+      0,
+      state.balance - bet
+    );
+
+    state.lost += bet;
+
+    showResult(
+      resultText || "✕",
+      `Проигрыш: −${formatNumber(bet)} виртуальных монет`,
+      false
+    );
+  }
+
+  updateScreen();
+}
+
+function playSlot(slotType, bet) {
+  const symbols = SYMBOLS[slotType];
+
+  let reels = [
+    symbols[randomInt(0, symbols.length - 1)],
+    symbols[randomInt(0, symbols.length - 1)],
+    symbols[randomInt(0, symbols.length - 1)]
+  ];
+
+  $("result").textContent = reels.join("   ");
+
+  // Демонстрационная вероятность: 40% выигрыш, 60% проигрыш.
+  const isWin = Math.random() < 0.40;
+  const multiplier = isWin ? getRandomMultiplier() : 0;
+
+  if (isWin) {
+    if (multiplier === 10) {
+      reels = [symbols[5], symbols[5], symbols[5]];
+    } else if (multiplier === 5) {
+      reels = [symbols[0], symbols[0], symbols[1]];
+    } else {
+      reels = [symbols[0], symbols[0], symbols[0]];
+    }
+  }
+
+  setTimeout(() => {
+    $("result").textContent = reels.join("   ");
+    finishRound(bet, multiplier);
+  }, 320);
+}
+
+function playRoulette(bet) {
+  const number = randomInt(0, 36);
+
+  const color =
+    number === 0
+      ? "зелёное"
+      : number % 2 === 0
+        ? "чёрное"
+        : "красное";
+
+  const isWin = Math.random() < 0.40;
+  const multiplier = isWin ? getRandomMultiplier() : 0;
+
+  finishRound(
+    bet,
+    multiplier,
+    `🎡 ${number}
+${color}`
+  );
+}
+
+function playDice(bet) {
+  const first = randomInt(1, 6);
+  const second = randomInt(1, 6);
+  const total = first + second;
+
+  const isWin = Math.random() < 0.40;
+  const multiplier =
+    isWin
+      ? total >= 10 ? 5 : 2
+      : 0;
+
+  finishRound(
+    bet,
+    multiplier,
+    `🎲 ${first} + ${second}
+= ${total}`
+  );
+}
+
+function playBlackjack(bet) {
+  const player = randomInt(14, 21);
+  const dealer = randomInt(14, 21);
+
+  const isWin = Math.random() < 0.40;
+  const multiplier =
+    isWin
+      ? player === 21 ? 5 : 2
+      : 0;
+
+  finishRound(
+    bet,
+    multiplier,
+    `♠ Игрок: ${player}
+♦ Дилер: ${dealer}`
+  );
+}
+
+function playWheel(bet) {
+  const isWin = Math.random() < 0.40;
+  const multiplier = isWin ? getRandomMultiplier() : 0;
+
+  finishRound(
+    bet,
+    multiplier,
+    `🎁
+X${multiplier || 0}`
+  );
+}
+
+$("spin").addEventListener("click", () => {
+  const bet = Number($("bet").value);
+
+  if (bet < 5 || bet > MAX_BALANCE) {
+    $("message").textContent =
+      "Ставка должна быть от 5 до 500 000.";
+    return;
+  }
+
+  if (bet > state.balance) {
+    $("message").textContent =
+      "Недостаточно виртуальных монет.";
+    return;
+  }
+
+  const selectedGame = $("game").value;
+
+  if (selectedGame === "slot1" || selectedGame === "slot2") {
+    playSlot(selectedGame, bet);
+  } else if (selectedGame === "roulette") {
+    playRoulette(bet);
+  } else if (selectedGame === "dice") {
+    playDice(bet);
+  } else if (selectedGame === "blackjack") {
+    playBlackjack(bet);
+  } else if (selectedGame === "wheel") {
+    playWheel(bet);
+  }
+});
+
+$("reset").addEventListener("click", () => {
+  if (!confirm("Сбросить баланс и статистику?")) {
+    return;
+  }
+
+  state.balance = START_BALANCE;
+  state.won = 0;
+  state.lost = 0;
+  state.games = 0;
+
+  $("result").textContent = "✦ ✦ ✦";
+  $("message").textContent =
+    "Демо-счёт восстановлен.";
+
+  updateScreen();
+});
+
+$("openAdmin").addEventListener("click", () => {
+  $("admin").classList.add("open");
+  $("adminControls").style.display = "none";
+  $("code").value = "";
+  $("amount").value = "";
+
+  $("message").textContent =
+    "Введите код панели.";
+});
+
+$("login").addEventListener("click", () => {
+  if ($("code").value === ADMIN_CODE) {
+    $("adminControls").style.display = "block";
+    $("code").value = "";
+
+    $("message").textContent =
+      "Панель открыта.";
+  } else {
+    $("adminControls").style.display = "none";
+
+    $("message").textContent =
+      "Неверный код.";
+  }
+});
+
+$("add").addEventListener("click", () => {
+  const amount = Number($("amount").value);
+
+  if (amount <= 0) {
+    $("message").textContent =
+      "Введите положительное число.";
+    return;
+  }
+
+  state.balance = Math.min(
+    MAX_BALANCE,
+    state.balance + amount
+  );
+
+  $("message").textContent =
+    `Добавлено: +${formatNumber(amount)}`;
+
+  updateScreen();
+});
+
+$("remove").addEventListener("click", () => {
+  const amount = Number($("amount").value);
+
+  if (amount <= 0) {
+    $("message").textContent =
+      "Введите положительное число.";
+    return;
+  }
+
+  state.balance = Math.max(
+    0,
+    state.balance - amount
+  );
+
+  $("message").textContent =
+    `Убрано: −${formatNumber(amount)}`;
+
+  updateScreen();
+});
+
+$("zero").addEventListener("click", () => {
+  state.balance = 0;
+
+  $("message").textContent =
+    "Баланс обнулён.";
+
+  updateScreen();
+});
+
+$("closeAdmin").addEventListener("click", () => {
+  $("adminControls").style.display = "none";
+  $("admin").classList.remove("open");
+
+  $("code").value = "";
+  $("amount").value = "";
+
+  $("message").textContent =
+    "Панель закрыта. Для входа снова нужен код.";
+});
+
+updateScreen();
+</script>
+</body>
+</html>
